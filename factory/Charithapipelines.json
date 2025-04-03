@@ -1,0 +1,9 @@
+{
+	"name": "Charithapipelines",
+	"location": "centralus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "0d281d66-a273-4267-b30c-4fa4472fe70b",
+		"tenantId": "17e46124-a380-4096-841f-150cd2c41f95"
+	}
+}
