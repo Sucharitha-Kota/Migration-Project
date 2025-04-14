@@ -1,0 +1,7 @@
+{
+	"name": "On-Prem-SQL-IR",
+	"properties": {
+		"type": "SelfHosted",
+		"description": "Creating for bulk insert of data from n-prem SQL Server to Azure environment."
+	}
+}

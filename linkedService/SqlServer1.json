@@ -1,0 +1,21 @@
+{
+	"name": "SqlServer1",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "SqlServer",
+		"typeProperties": {
+			"server": "CHARITHAVINAY\\SQLEXPRESS",
+			"database": "Financial-Services",
+			"encrypt": "mandatory",
+			"trustServerCertificate": true,
+			"authenticationType": "SQL",
+			"userName": "Suchiadmin",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiJiYTliMTNmNi0yNTBlLTQwZGQtYTRlZS03Y2IxMzhjZDY5MWUiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "On-Prem-SQL-IR",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}
