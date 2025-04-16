@@ -95,7 +95,13 @@
 							"outputs": [
 								{
 									"referenceName": "ds_sink_copy",
-									"type": "DatasetReference"
+									"type": "DatasetReference",
+									"parameters": {
+										"tablename": {
+											"value": "@item().TableName",
+											"type": "Expression"
+										}
+									}
 								}
 							]
 						}
