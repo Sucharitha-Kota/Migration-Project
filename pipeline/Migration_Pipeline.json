@@ -179,8 +179,12 @@
 								"storedProcedureName": "[dbo].[UpdateWatermarkValue]",
 								"storedProcedureParameters": {
 									"@TableNames": {
-										"value": "",
+										"value": "@item().TableNames",
 										"type": "String"
+									},
+									"@NewWatermark": {
+										"value": "@utcNow()",
+										"type": "Datetime"
 									}
 								}
 							},
