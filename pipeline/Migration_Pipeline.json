@@ -176,7 +176,13 @@
 							},
 							"userProperties": [],
 							"typeProperties": {
-								"storedProcedureName": "[dbo].[UpdateWatermarkValue]"
+								"storedProcedureName": "[dbo].[UpdateWatermarkValue]",
+								"storedProcedureParameters": {
+									"@TableNames": {
+										"value": "",
+										"type": "String"
+									}
+								}
 							},
 							"linkedServiceName": {
 								"referenceName": "SqlServer1",
