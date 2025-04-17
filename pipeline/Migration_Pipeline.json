@@ -24,7 +24,8 @@
 						"referenceName": "ds_migrationfromSQL",
 						"type": "DatasetReference",
 						"parameters": {
-							"TableName": "watermark_table"
+							"TableName": "watermark_table",
+							"SchemaName": "dbo"
 						}
 					},
 					"firstRowOnly": false
@@ -71,7 +72,10 @@
 							"typeProperties": {
 								"source": {
 									"type": "SqlServerSource",
-									"sqlReaderQuery": "Select * from @{item().Table_name} Where @{item().WatermarkColumn}>'@{item().watermarkvalue}' ",
+									"sqlReaderQuery": {
+										"value": "Select * from @{item().TableNames} Where @{item().WatermarkColumn}>'@{item().watermarkvalue}' ",
+										"type": "Expression"
+									},
 									"queryTimeout": "02:00:00",
 									"partitionOption": "None"
 								},
@@ -99,7 +103,13 @@
 							"inputs": [
 								{
 									"referenceName": "ds_copydataactivity",
-									"type": "DatasetReference"
+									"type": "DatasetReference",
+									"parameters": {
+										"Table_Name": {
+											"value": "@item().TableNames",
+											"type": "Expression"
+										}
+									}
 								}
 							],
 							"outputs": [
@@ -108,7 +118,7 @@
 									"type": "DatasetReference",
 									"parameters": {
 										"tablename": {
-											"value": "@item().table_name",
+											"value": "@item().TableNames",
 											"type": "Expression"
 										}
 									}
@@ -130,7 +140,10 @@
 							"typeProperties": {
 								"source": {
 									"type": "SqlServerSource",
-									"sqlReaderQuery": "SELECT MAX(@{item().WatermarkColumn}) \nAS MaxWatermark FROM dbo.@{item().Table_name} \nWHERE @{item().WatermarkColumn} > '@{item().Watermarkvalue}'",
+									"sqlReaderQuery": {
+										"value": "SELECT MAX(@{item().WatermarkColumn}) \nAS MaxWatermark FROM dbo.@{item().TableNames} \nWHERE @{item().WatermarkColumn} > '@{item().Watermarkvalue}'",
+										"type": "Expression"
+									},
 									"queryTimeout": "02:00:00",
 									"partitionOption": "None"
 								},

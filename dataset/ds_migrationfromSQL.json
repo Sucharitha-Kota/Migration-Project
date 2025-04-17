@@ -8,10 +8,17 @@
 		"parameters": {
 			"TableName": {
 				"type": "string"
+			},
+			"SchemaName": {
+				"type": "string"
 			}
 		},
 		"annotations": [],
 		"type": "SqlServerTable",
-		"schema": []
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "watermark_table"
+		}
 	}
 }
