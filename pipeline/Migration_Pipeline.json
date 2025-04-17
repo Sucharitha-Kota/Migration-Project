@@ -17,13 +17,15 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlServerSource",
-						"sqlReaderQuery": "SELECT table_name \nFROM information_schema.tables \nWHERE table_schema = 'dbo' AND table_type = 'BASE TABLE'",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
 					"dataset": {
 						"referenceName": "ds_migrationfromSQL",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"TableName": "watermark_table"
+						}
 					},
 					"firstRowOnly": false
 				}
@@ -45,11 +47,19 @@
 						"value": "@activity('getlistoftables').output.value",
 						"type": "Expression"
 					},
+					"isSequential": true,
 					"activities": [
 						{
 							"name": "migrationfromsqltoadls",
 							"type": "Copy",
-							"dependsOn": [],
+							"dependsOn": [
+								{
+									"activity": "MaximumValue",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
 							"policy": {
 								"timeout": "0.12:00:00",
 								"retry": 0,
@@ -61,10 +71,7 @@
 							"typeProperties": {
 								"source": {
 									"type": "SqlServerSource",
-									"sqlReaderQuery": {
-										"value": "SELECT * FROM @{item().table_name}\n",
-										"type": "Expression"
-									},
+									"sqlReaderQuery": "Select * from @{item().Table_name} Where @{item().WatermarkColumn}>'@{item().watermarkvalue}' ",
 									"queryTimeout": "02:00:00",
 									"partitionOption": "None"
 								},
@@ -91,7 +98,7 @@
 							},
 							"inputs": [
 								{
-									"referenceName": "ds_migrationfromSQL",
+									"referenceName": "ds_copydataactivity",
 									"type": "DatasetReference"
 								}
 							],
@@ -107,6 +114,61 @@
 									}
 								}
 							]
+						},
+						{
+							"name": "MaximumValue",
+							"type": "Lookup",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "SqlServerSource",
+									"sqlReaderQuery": "SELECT MAX(@{item().WatermarkColumn}) \nAS MaxWatermark FROM dbo.@{item().Table_name} \nWHERE @{item().WatermarkColumn} > '@{item().Watermarkvalue}'",
+									"queryTimeout": "02:00:00",
+									"partitionOption": "None"
+								},
+								"dataset": {
+									"referenceName": "ds_maxlookup",
+									"type": "DatasetReference",
+									"parameters": {
+										"Table_Name": "watermark_table"
+									}
+								}
+							}
+						},
+						{
+							"name": "UpdateWaterMark",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [
+								{
+									"activity": "migrationfromsqltoadls",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "[dbo].[UpdateWatermarkValue]"
+							},
+							"linkedServiceName": {
+								"referenceName": "SqlServer1",
+								"type": "LinkedServiceReference"
+							}
 						}
 					]
 				}
