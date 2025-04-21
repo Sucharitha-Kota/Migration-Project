@@ -155,6 +155,49 @@
 									}
 								}
 							}
+						},
+						{
+							"name": "executewatermarkcolumn",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [
+								{
+									"activity": "migrationfromsqltoadls",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "[dbo].[UpdateWatermarkValue]",
+								"storedProcedureParameters": {
+									"NewWatermark": {
+										"value": {
+											"value": "@activity('MaximumValue').output.firstRow.MaxValue \n",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"TableNames": {
+										"value": {
+											"value": "@item().TableNames",
+											"type": "Expression"
+										},
+										"type": "String"
+									}
+								}
+							},
+							"linkedServiceName": {
+								"referenceName": "SqlServer1",
+								"type": "LinkedServiceReference"
+							}
 						}
 					]
 				}
