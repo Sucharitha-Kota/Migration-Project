@@ -183,7 +183,10 @@
 										"type": "String"
 									},
 									"@NewWatermark": {
-										"value": "@utcNow()",
+										"value": {
+											"value": "@activity('MaximumValue').output.firstRow.MaxValue \n",
+											"type": "Expression"
+										},
 										"type": "Datetime"
 									}
 								}
