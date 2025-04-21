@@ -180,7 +180,7 @@
 								"storedProcedureParameters": {
 									"NewWatermark": {
 										"value": {
-											"value": "@activity('MaximumValue').output.firstRow.MaxValue \n",
+											"value": "@activity('MaximumValue').output.firstRow.MaxWatermark\n\n",
 											"type": "Expression"
 										},
 										"type": "String"
